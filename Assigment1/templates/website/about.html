@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>🤖 About This Project</h1>
+    </header>
+    <nav>
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'about' %}">About</a>
+    </nav>
+    <main>
+        <section class="about-section">
+            <h2>Our Vision</h2>
+            <p>This Django project is built to enhance web development efficiency and creativity.</p>
+            <div class="features">
+                <div class="feature">
+                    <h3>🔧 Dynamic Routing</h3>
+                    <p>Seamless navigation powered by Django URLs.</p>
+                </div>
+                <div class="feature">
+                    <h3>🎨 Stylish UI</h3>
+                    <p>Enhanced CSS animations and smooth interactions.</p>
+                </div>
+                <div class="feature">
+                    <h3>💡 Scalable Backend</h3>
+                    <p>Built to grow with your project needs.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>🌍 Made for developers, by developers | © 2025</p>
+    </footer>
+</body>
+</html>

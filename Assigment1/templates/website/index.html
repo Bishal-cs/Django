@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>🚀 Welcome to My Django Project</h1>
+    </header>
+    <nav>
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'about' %}">About</a>
+    </nav>
+    <main>
+        <section class="hero">
+            <h2>Crafting the Future with Django</h2>
+            <p>Build powerful, scalable web applications with ease.</p>
+            <button class="cta">Get Started</button>
+        </section>
+    </main>
+    <footer>
+        <p>⚡ Built with Django | © 2025</p>
+    </footer>
+</body>
+</html>
