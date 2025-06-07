@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ img.name }} - Image Detail
+{% endblock %}
+
+{% block Content %}
+    <div class="relative min-h-screen flex items-center justify-center bg-gray-900 text-white">
+
+        <!-- Background Blur -->
+        <div class="absolute inset-0 bg-cover bg-center opacity-40 blur-md" style="background-image: url('{{ img.image.url }}');"></div>
+
+        <!-- Main Content -->
+        <div class="relative z-10 max-w-3xl w-full bg-white/10 backdrop-blur-xl p-8 rounded-xl shadow-xl border border-white/20">
+            
+            <!-- Image Display -->
+            <div class="overflow-hidden rounded-xl shadow-lg border border-white/30">
+                <img src="{{ img.image.url }}" class="w-full h-auto object-cover rounded-xl" alt="{{ img.name }}">
+            </div>
+
+            <!-- Image Info -->
+            <div class="mt-6 text-center">
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-yellow-300 to-pink-400 bg-clip-text text-transparent">
+                    {{ img.name }}
+                </h1>
+                <p class="text-lg mt-2 opacity-80">{{ img.description }}</p>
+                <span class="inline-block mt-4 px-4 py-2 rounded-full text-sm font-medium bg-white/20 backdrop-blur-md">
+                    📅 Uploaded on: {{ img.date_time_stamp }}
+                </span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-center space-x-4 mt-6">
+                <!-- Download Button: Saves Image with Its Name -->
+                <a href="{{ img.image.url }}" download="{{ img.name }}.jpg"
+                   class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white px-6 py-3 rounded-lg font-medium shadow-md">
+                    ⬇ Download
+                </a>
+
+                <!-- Share Button -->
+                <button onclick="shareImage('{{ img.image.url }}', '{{ img.name }}')"
+                        class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-lg font-medium shadow-md">
+                    📤 Share
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Sharing Functionality -->
+    <script>
+        function shareImage(imageUrl, imageName) {
+            if (navigator.share) {
+                navigator.share({
+                    title: imageName,
+                    text: "Check out this image: " + imageName,
+                    url: imageUrl
+                }).then(() => console.log('Image shared successfully'))
+                .catch((error) => console.log('Error sharing', error));
+            } else {
+                alert("Sharing is not supported in this browser.");
+            }
+        }
+    </script>
+{% endblock %}

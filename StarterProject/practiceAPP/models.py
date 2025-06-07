@@ -10,9 +10,13 @@ class all_typs_imgs(models.Model):
         ('type4', 'Type 4'),
         ('type5', 'Type 5'),
     ]
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='images/')
     date_time_stamp = models.DateTimeField(default=timezone.now)
-
+    type = models.CharField(
+        max_length=20,
+        choices=TYPES_OF_CHOICES)
+    description = models.TextField(default='')
+    
     def __str__(self):
         return self.name
