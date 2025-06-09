@@ -10,3 +10,6 @@ def index(request):
 def img_detail(request, img_id):
     img = get_object_or_404(all_typs_imgs, pk=img_id)
     return render(request, 'website/img_detail.html', {'img': img})
+
+def image_stores(request):
+    return render(request, "website/image_stores.html")

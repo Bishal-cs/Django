@@ -1,0 +1,224 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Image Store - Photo Gallery
+{% endblock %}
+
+{% block Content %}
+    <div class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
+        
+        <!-- Header Section -->
+        <div class="relative pt-16 pb-8">
+            <div class="absolute inset-0 bg-black/30"></div>
+            
+            <!-- Back Button -->
+            <div class="absolute top-6 left-6 z-20">
+                <button onclick="history.back()" 
+                        class="group bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/30 hover:border-white/50 text-white px-6 py-3 rounded-2xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        <span>Back</span>
+                    </div>
+                </button>
+            </div>
+            
+            <div class="relative z-10 text-center text-white px-4">
+                <h1 class="text-5xl md:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+                    Image Store
+                </h1>
+                <p class="text-xl md:text-2xl opacity-80 max-w-2xl mx-auto">
+                    Discover and explore our stunning collection of images
+                </p>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="max-w-6xl mx-auto px-4 mb-8">
+            <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
+                <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <!-- Search Bar -->
+                    <div class="relative flex-1 max-w-md">
+                        <input type="text" placeholder="Search images..." 
+                               class="w-full bg-white/20 backdrop-blur-md border border-white/30 rounded-xl px-4 py-3 pl-12 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                        <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                            🔍
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Buttons -->
+                    <div class="flex gap-2 flex-wrap">
+                        <button class="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200">
+                            All
+                        </button>
+                        <button class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200">
+                            Nature
+                        </button>
+                        <button class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200">
+                            Abstract
+                        </button>
+                        <button class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200">
+                            Architecture
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Gallery Grid -->
+        <div class="max-w-7xl mx-auto px-4 pb-16">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                
+                {% for img in images %}
+                <!-- Image Card -->
+                <div class="group relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                    
+                    <!-- Image Container -->
+                    <div class="relative overflow-hidden rounded-t-2xl">
+                        <img src="{{ img.image.url }}" 
+                             alt="{{ img.name }}" 
+                             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- Overlay on Hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute bottom-4 left-4 right-4">
+                                <div class="flex justify-center">
+                                    <!-- View Button -->
+                                    <a href="{% url 'image_detail' img.id %}" 
+                                       class="bg-white/90 hover:bg-white text-gray-800 px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 transform hover:scale-105">
+                                        👁 View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Image Info -->
+                    <div class="p-4">
+                        <h3 class="text-white font-semibold text-lg mb-2 truncate">
+                            {{ img.name }}
+                        </h3>
+                        <p class="text-white/70 text-sm mb-3 line-clamp-2">
+                            {{ img.description|default:"Beautiful image from our collection" }}
+                        </p>
+                        
+                        <!-- Stats and Date -->
+                        <div class="flex justify-between items-center text-xs text-white/60">
+                            <span class="flex items-center gap-1">
+                                📅 {{ img.date_time_stamp|date:"M d, Y" }}
+                            </span>
+                            <div class="flex gap-3">
+                                <span class="flex items-center gap-1">
+                                    ❤ 24
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    👁 156
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                
+                <!-- Empty State -->
+                <div class="col-span-full text-center py-16">
+                    <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-12 border border-white/20 max-w-md mx-auto">
+                        <div class="text-6xl mb-4">📸</div>
+                        <h3 class="text-2xl font-bold text-white mb-2">No Images Yet</h3>
+                        <p class="text-white/70 mb-6">Start building your image collection by uploading your first image.</p>
+                        <button class="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200">
+                            Upload First Image
+                        </button>
+                    </div>
+                </div>
+                
+                {% endfor %}
+            </div>
+            
+            <!-- Load More Button -->
+            {% if images %}
+            <div class="text-center mt-12">
+                <button class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-xl font-medium text-lg transition-all duration-200 transform hover:scale-105">
+                    Load More Images
+                </button>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Floating Action Button for Upload -->
+        <div class="fixed bottom-8 right-8 z-50">
+            <button class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl transition-all duration-200 transform hover:scale-110">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript for Interactions -->
+    <script>
+        // Search functionality
+        document.querySelector('input[type="text"]').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const imageCards = document.querySelectorAll('.grid > div:not(.col-span-full)');
+            
+            imageCards.forEach(card => {
+                const imageName = card.querySelector('h3').textContent.toLowerCase();
+                const imageDesc = card.querySelector('p').textContent.toLowerCase();
+                
+                if (imageName.includes(searchTerm) || imageDesc.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter buttons
+        document.querySelectorAll('button').forEach(button => {
+            if (button.textContent.includes('All') || button.textContent.includes('Nature') || 
+                button.textContent.includes('Abstract') || button.textContent.includes('Architecture')) {
+                button.addEventListener('click', function() {
+                    // Remove active class from all filter buttons
+                    document.querySelectorAll('button').forEach(btn => {
+                        if (btn.classList.contains('bg-cyan-500')) {
+                            btn.classList.remove('bg-cyan-500', 'bg-cyan-600');
+                            btn.classList.add('bg-white/20', 'hover:bg-white/30');
+                        }
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.remove('bg-white/20', 'hover:bg-white/30');
+                    this.classList.add('bg-cyan-500', 'hover:bg-cyan-600');
+                    
+                    // Filter logic would go here
+                    console.log('Filter by:', this.textContent);
+                });
+            }
+        });
+
+        // Smooth scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all image cards
+        document.querySelectorAll('.grid > div').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+{% endblock %}

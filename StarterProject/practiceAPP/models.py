@@ -5,24 +5,38 @@ from django.contrib.auth.models import User
 # Create your models here.
 class all_typs_imgs(models.Model):
     TYPES_OF_CHOICES = [
-        ('type1', 'Type 1'),
-        ('type2', 'Type 2'),
-        ('type3', 'Type 3'),
-        ('type4', 'Type 4'),
-        ('type5', 'Type 5'),
+        ('gaming', 'Gaming'),
+        ('nature', 'Nature & Landscapes'),
+        ('urban', 'Urban'),
+        ('abstract', 'Abstract'),
+        ('portrait', 'Portrait'),
+        ('technology', 'Technology'),
+        ('fashion', 'Fashion'),
+        ('architecture', 'Architecture'),
+        ('wildlife', 'Wildlife'),
+        ('sports', 'Sports'),
+        ('travel', 'Travel'),
+        ('food', 'Food & Cuisine'),
+        ('macro', 'Macro'),
+        ('aerial', 'Aerial'),
+        ('cinematic', 'Cinematic'),
+        ('fantasy', 'Fantasy'),
+        ('vintage', 'Vintage'),
     ]
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='images/')
     date_time_stamp = models.DateTimeField(default=timezone.now)
     type = models.CharField(
         max_length=20,
-        choices=TYPES_OF_CHOICES)
+        choices=TYPES_OF_CHOICES
+    )
     description = models.TextField(default='')
-    
+
     def __str__(self):
         return self.name
-    
-# one to many relationship with user 
+
+
+# One-to-many relationship: one image can have many reviews
 class Image_review(models.Model):
     image = models.ForeignKey(
         all_typs_imgs,
@@ -33,14 +47,15 @@ class Image_review(models.Model):
         User,
         on_delete=models.CASCADE,
     )
-    ratings = models.IntegerField(default=0),
-    comment = models.TextField(default=''),
+    ratings = models.IntegerField(default=0)
+    comment = models.TextField(default='')
     date_added = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f'{self.user.username} reviewed {self.image.name}'
-    
-# Many to many relationship with user
+
+
+# Many-to-many relationship: a specific image can be linked with many image types
 class specific_image(models.Model):
     name = models.CharField(max_length=100)
     image_info = models.CharField(max_length=100)
@@ -48,14 +63,14 @@ class specific_image(models.Model):
 
     def __str__(self):
         return self.name
-    
-# one to one relationship with user
 
+
+# One-to-one relationship with user: a profile for each user
 class ImageProfile(models.Model):
-    user = models.OneToOneField(all_typs_imgs, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     profile_number = models.CharField(max_length=100)
     isshu_date = models.DateTimeField(default=timezone.now)
     valid_until = models.DateTimeField()
 
     def __str__(self):
-        return f'{self.user.name} Profile'
+        return f'{self.user.username} Profile'
