@@ -1,6 +1,6 @@
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
-from .models import all_typs_imgs
+from django.shortcuts import render, get_object_or_404
+from .models import all_typs_imgs, image_store
+from .forms import Image_from
 
 # Create your views here.
 def index(request):
@@ -12,4 +12,15 @@ def img_detail(request, img_id):
     return render(request, 'website/img_detail.html', {'img': img})
 
 def image_stores(request):
-    return render(request, "website/image_stores.html")
+    ImageStores = None
+    if request.method == 'POST':
+        # Handle form submission if needed
+        form = Image_from(request.POST)
+        if form.is_valid():
+            # Process the form data using changed_data; note that cleaned_data is usually preferred.
+            imagetyps = form.cleaned_data['image_types']
+            ImageStores = image_store.objects.filter(image_type=imagetyps)
+    else:
+        request.method == 'GET'
+        form = Image_from()
+    return render(request, 'website/image_stores.html', {'ImageStores': ImageStores, 'form': form})

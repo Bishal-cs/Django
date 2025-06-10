@@ -56,7 +56,7 @@ class Image_review(models.Model):
 
 
 # Many-to-many relationship: a specific image can be linked with many image types
-class specific_image(models.Model):
+class image_store(models.Model):
     name = models.CharField(max_length=100)
     image_info = models.CharField(max_length=100)
     image_type = models.ManyToManyField(all_typs_imgs, related_name='specific_images')

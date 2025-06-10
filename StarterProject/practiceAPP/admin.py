@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import all_typs_imgs, Image_review, specific_image, ImageProfile
+from .models import all_typs_imgs, Image_review, image_store, ImageProfile
 
 # Inline for Image_review in all_typs_imgs admin
 class ImageReviewInline(admin.TabularInline):
@@ -12,7 +12,7 @@ class AllTypsImgsAdmin(admin.ModelAdmin):
     inlines = [ImageReviewInline]
 
 # Admin for specific_image
-class SpecificImageAdmin(admin.ModelAdmin):
+class IMAGESTOREAdmin(admin.ModelAdmin):
     list_display = ('name', 'image_info')
     filter_horizontal = ('image_type',)
 
@@ -21,5 +21,5 @@ class ImageProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'profile_number', 'isshu_date', 'valid_until')
 
 admin.site.register(all_typs_imgs, AllTypsImgsAdmin)
-admin.site.register(specific_image, SpecificImageAdmin)
+admin.site.register(image_store, IMAGESTOREAdmin)
 admin.site.register(ImageProfile, ImageProfileAdmin)
