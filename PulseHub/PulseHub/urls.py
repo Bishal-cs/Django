@@ -18,13 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from . import views
-
+from Home_app.views import PostsList
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.base, name='base'),    
-    path('home/', include('Home_app.urls')),
-
-    path("__reload__/", include("django_browser_reload.urls")),
+    path('', PostsList, name='home'),  # Show posts on main page
+    path('posts/', include('Home_app.urls')),  # Other post-related URLs
+    path('', include('django_browser_reload.urls')),  # For live reloading during development
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

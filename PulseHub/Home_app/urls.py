@@ -4,5 +4,8 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-    path('', views.Home, name='Home'),
+    path('', views.PostsList, name='PostsList'),
+    path('create/', views.PostCreate, name='PostCreate'),
+    path('<int:post_id>/edit/', views.Post_edit, name='PostEdit'),
+    path('<int:post_id>/delete/', views.Post_delete, name='PostDelete'),
 ]

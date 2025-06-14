@@ -1,1 +1,227 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block Title %}PulseHub Feed{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Animated Background -->
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 relative overflow-hidden">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute w-96 h-96 -top-20 -left-20 bg-blue-500/20 rounded-full filter blur-3xl animate-pulse"></div>
+        <div class="absolute w-96 h-96 -bottom-20 -right-20 bg-purple-500/20 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="relative z-10 bg-black/30 backdrop-blur-lg border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500">
+                        PulseHub
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="#" class="text-gray-300 hover:text-blue-300 px-3 py-2 rounded-md text-sm font-medium">Feed</a>
+                        <a href="#" class="text-gray-300 hover:text-blue-300 px-3 py-2 rounded-md text-sm font-medium">Explore</a>
+                        <a href="#" class="text-gray-300 hover:text-blue-300 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Feed Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-gray-800">
+                    <h2 class="text-xl font-semibold text-white mb-4">Profile Overview</h2>
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 p-1">
+                            <div class="w-full h-full rounded-full bg-gray-900 flex items-center justify-center">
+                                <span class="text-2xl">👤</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-white">
+                                {% if user.is_authenticated %}
+                                    {{ user.username }}
+                                {% else %}
+                                    Guest User
+                                {% endif %}
+                            </h3>
+                            <p class="text-gray-400">
+                                {% if user.is_authenticated %}
+                                    @{{ user.username|lower }}
+                                {% else %}
+                                    @guest
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Feed -->
+            <div class="lg:col-span-2">
+                <!-- New Post Input -->
+                {% if user.is_authenticated %}
+                <div class="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-gray-800 mb-8">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'PostCreate' %}">
+                        {% csrf_token %}
+                        <div class="flex space-x-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 p-0.5">
+                                <div class="w-full h-full rounded-full bg-gray-900"></div>
+                            </div>
+                            <div class="flex-1">
+                                <textarea name="text" class="w-full bg-gray-900/50 border border-gray-700 rounded-lg p-4 text-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="What's on your mind?" required></textarea>
+                                <div class="mt-4 flex justify-between items-center">
+                                    <div class="flex space-x-4">
+                                        <label class="cursor-pointer text-gray-400 hover:text-blue-400">
+                                            <input type="file" name="photo" class="hidden" accept="image/*">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </label>
+                                    </div>
+                                    <button type="submit" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity">
+                                        Post
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+
+                <!-- Debug Info (Remove this in production) -->
+                {% if debug %}
+                <div class="bg-yellow-500/20 backdrop-blur-xl rounded-xl p-4 border border-yellow-500/50 mb-6">
+                    <p class="text-yellow-200 text-sm">
+                        Debug: Posts count = {{ posts|length }}
+                        {% if posts %}
+                            | First post: "{{ posts.0.text|truncatechars:50 }}"
+                        {% endif %}
+                    </p>
+                </div>
+                {% endif %}
+
+                <!-- Feed Posts -->
+                <div class="space-y-6">
+                    {% for post in posts %}
+                    <div class="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-gray-800 hover:border-gray-700 transition-colors">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 p-0.5">
+                                <div class="w-full h-full rounded-full bg-gray-900 flex items-center justify-center">
+                                    <span class="text-white text-sm font-medium">
+                                        {{ post.user.username|first|upper }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-white font-medium">{{ post.ser.username|default:"Unknown User" }}</h4>
+                                <p class="text-gray-400 text-sm">
+                                    {% if post.created_at %}
+                                        {{ post.created_at|timesince }} ago
+                                    {% else %}
+                                        Just now
+                                    {% endif %}
+                                </p>
+                            </div>
+                            {% if user == post.user %}
+                            <div class="flex items-center space-x-2">
+                                <a href="{% url 'PostEdit' post.id %}" class="text-gray-400 hover:text-blue-400 text-sm px-2 py-1 rounded hover:bg-gray-800 transition-colors">Edit</a>
+                                <a href="{% url 'PostDelete' post.id %}" class="text-gray-400 hover:text-red-400 text-sm px-2 py-1 rounded hover:bg-gray-800 transition-colors">Delete</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if post.text %}
+                        <div class="text-gray-300 mb-4 leading-relaxed">
+                            {{ post.text|linebreaks }}
+                        </div>
+                        {% endif %}
+                        
+                        {% if post.photo %}
+                        <div class="bg-gray-900/50 rounded-xl overflow-hidden mb-4">
+                            <img src="{{ post.photo.url }}" alt="Post image" class="w-full h-auto max-h-96 object-cover">
+                        </div>
+                        {% endif %}
+                        
+                        <div class="flex items-center space-x-6 pt-4 border-t border-gray-800">
+                            <button class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                                <span class="text-sm">{{ post.likes_count|default:0 }}</span>
+                            </button>
+                            <button class="flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                </svg>
+                                <span class="text-sm">{{ post.comments_count|default:0 }}</span>
+                            </button>
+                            <button class="flex items-center space-x-2 text-gray-400 hover:text-green-400 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                                </svg>
+                                <span class="text-sm">Share</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="bg-black/40 backdrop-blur-xl rounded-xl p-8 border border-gray-800 text-center">
+                        <div class="text-6xl mb-4">📝</div>
+                        <h3 class="text-xl font-semibold text-white mb-2">No posts yet</h3>
+                        <p class="text-gray-400 mb-4">Be the first to share something amazing!</p>
+                        {% if not user.is_authenticated %}
+                        <p class="text-gray-500 text-sm">Please log in to create posts</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Load More Button (if pagination is needed) -->
+                {% if posts.has_next %}
+                <div class="text-center mt-8">
+                    <a href="?page={{ posts.next_page_number }}" class="bg-black/40 backdrop-blur-xl border border-gray-800 text-gray-300 hover:text-white hover:border-gray-700 px-6 py-3 rounded-full transition-colors">
+                        Load More Posts
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add some JavaScript for better UX -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-resize textarea
+    const textarea = document.querySelector('textarea[name="text"]');
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    }
+    
+    // File input preview
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                console.log('File selected:', file.name);
+                // You can add image preview functionality here
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

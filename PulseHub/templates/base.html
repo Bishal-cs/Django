@@ -5,46 +5,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block Title %}PulseHub{% endblock %}</title>
+    <title>{% block title %}PulseHub{% endblock %}</title>
     {% tailwind_css %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#3B82F6',
+                        'secondary': '#6366F1',
+                    },
+                }
+            },
+            plugins: [],
+        }
+    </script>
 </head>
-<body class="bg-gray-950 min-h-screen text-white antialiased">
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
+    <nav class="bg-gray-800/80 backdrop-blur-lg border-b border-gray-700 fixed w-full z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <a href="/" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500">
-                        PulseHub
-                    </a>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="/home" class="text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                        <a href="/feed" class="text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Feed</a>
-                        <a href="/explore" class="text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Explore</a>
-                        <a href="/profile" class="text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
-                    </div>
-                </div>
-                <div class="flex items-center">
-                    <button class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity">
-                        Connect
-                    </button>
-                </div>
+            <div class="flex justify-between items-center h-16">
+                <a href="{% url 'PostsList' %}" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">PulseHub</a>
+                <ul class="flex items-center space-x-6">
+                    <li><a href="{% url 'PostsList' %}" class="text-gray-300 hover:text-blue-400 transition-colors">Home</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-blue-400 transition-colors">Explore</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="#" class="text-gray-300 hover:text-blue-400 transition-colors">Profile</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}" class="text-gray-300 hover:text-blue-400 transition-colors">Login</a></li>
+                        <li><a href="{% url 'register' %}" class="text-gray-300 hover:text-blue-400 transition-colors">Register</a></li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="pt-16">
+    <main class="flex-grow pt-16">
+        {% if messages %}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            {% for message in messages %}
+            <div class="p-4 mb-4 rounded-lg {% if message.tags == 'success' %}bg-green-800/50 text-green-200{% elif message.tags == 'error' %}bg-red-800/50 text-red-200{% else %}bg-blue-800/50 text-blue-200{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900/80 backdrop-blur-lg border-t border-gray-800 py-6 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400">
-            <p>&copy; 2025 PulseHub. All rights reserved.</p>
+    <footer class="bg-gray-800/80 backdrop-blur-lg border-t border-gray-700 py-4 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-gray-400 text-center">&copy; 2025 PulseHub. All rights reserved.</p>
         </div>
     </footer>
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
